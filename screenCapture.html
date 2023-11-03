@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <button id="captureButton">Capture</button>
+
+    <script>
+        const button = document.getElementById("captureButton");
+
+        button.addEventListener("click", async () => {
+            const stream = await navigator.mediaDevices.getDisplayMedia();
+            const recorder = new MediaRecorder(stream);
+            recorder.start();
+
+            const [video] = stream.getVideoTracks();
+            video.onended = () => {
+                recorder.stop();
+            };
+
+            recorder.ondataavailable = (evt) => {
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(evt.data);
+                a.download = "capture.webm";
+                a.click();
+            };
+        });
+</script>
+</body>
+</html>
